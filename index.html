@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="SOUKHIM | Masterpiece Wellness">
+    <meta property="og:description" content="Biological refinement curated through Kerala's heritage.">
+    <title>SOUKHIM | The Art of Biological Refinement</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Montserrat:wght@100;300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #050505;
+            --accent: #B45309; /* Deep Gold */
+            --accent-soft: #78350F;
+            --text: #F9F9F9;
+            --text-dim: #888;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Montserrat', sans-serif;
+            
+            /* Macro Colors */
+            --p-color: #10B981; /* Green */
+            --c-color: #3B82F6; /* Blue */
+            --f-color: #F59E0B; /* Orange */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #cursor {
+            position: fixed; top: 0; left: 0; width: 12px; height: 12px;
+            background: var(--accent); border-radius: 50%;
+            pointer-events: none; z-index: 10000; mix-blend-mode: difference;
+        }
+
+        #cursor-follower {
+            position: fixed; top: 0; left: 0; width: 40px; height: 40px;
+            border: 1px solid var(--accent); border-radius: 50%; opacity: 0.3;
+            pointer-events: none; z-index: 9999;
+        }
+
+        .noise {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; opacity: 0.04; pointer-events: none;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/b/b1/Grainy_gradient_texture.jpg');
+        }
+
+        .bio-background {
+            position: fixed; top: 0; right: 0; width: 50vw; height: 100vh;
+            background: url('https://raw.githubusercontent.com/Anupam-Panda/Resources/main/human-outline.png') no-repeat center right;
+            background-size: contain; opacity: 0.05; z-index: -1; filter: grayscale(1) invert(1);
+            mask-image: linear-gradient(to left, black, transparent);
+        }
+
+        .curtain {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 100000; display: flex; align-items: center; justify-content: center;
+        }
+        .curtain-logo { font-family: var(--font-serif); font-size: 2rem; letter-spacing: 0.5em; opacity: 0; }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 60px; }
+        @media (max-width: 768px) { .container { padding: 0 24px; } }
+
+        /* Hero */
+        .hero {
+            height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; position: relative;
+        }
+
+        .hero-title {
+            font-family: var(--font-serif); font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 300; line-height: 0.85; position: relative;
+        }
+
+        .hero-title .italic { font-style: italic; color: transparent; -webkit-text-stroke: 1px var(--text); }
+
+        .luxury-quote-container { margin: 4rem 0; text-align: center; }
+        .luxury-quote {
+            font-family: var(--font-serif); font-size: 1.5rem; font-style: italic;
+            animation: luxuryBlink 4s infinite ease-in-out;
+        }
+
+        @keyframes luxuryBlink {
+            0%, 100% { opacity: 0.2; transform: scale(0.98); filter: blur(2px); }
+            50% { opacity: 1; transform: scale(1); filter: blur(0); color: var(--accent); }
+        }
+
+        .scroll-hint { position: absolute; bottom: 4rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; opacity: 0.4; }
+        .scroll-hint span { width: 1px; height: 100px; background: linear-gradient(to bottom, var(--accent), transparent); }
+
+        /* Section Styling */
+        .section { padding: 10rem 0; border-top: 1px solid var(--border); }
+        .section-header { margin-bottom: 6rem; text-align: center; }
+        .badge { font-size: 0.7rem; color: var(--accent); letter-spacing: 0.4em; text-transform: uppercase; }
+        .title-large { font-family: var(--font-serif); font-size: clamp(2.5rem, 6vw, 5rem); margin-top: 1.5rem; font-weight: 300; }
+
+        /* Form */
+        .luxury-form { max-width: 1100px; margin: 0 auto; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4rem 6rem; }
+        @media (max-width: 900px) { .form-grid { grid-template-columns: 1fr; } }
+
+        .form-item label { display: block; font-size: 0.65rem; letter-spacing: 0.2em; color: var(--text-dim); margin-bottom: 1rem; }
+        .form-item input, .form-item select {
+            width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border);
+            color: var(--text); padding: 1.5rem 0; font-family: var(--font-serif);
+            font-size: 1.8rem; outline: none; transition: border-color 0.6s ease;
+        }
+        .form-item input:focus, .form-item select:focus { border-color: var(--accent); }
+
+        .btn-wrap { margin-top: 6rem; text-align: center; }
+        .btn-luxury {
+            background: transparent; border: 1px solid var(--border);
+            padding: 2.5rem 6rem; font-size: 0.9rem; letter-spacing: 0.3em;
+            color: var(--text); position: relative; overflow: hidden; transition: all 0.6s ease;
+        }
+        .btn-luxury:hover { color: #000; background: var(--text); border-color: var(--text); }
+
+        /* Results Visualization */
+        .results-hero { text-align: center; padding: 10rem 0 5rem; }
+        .macro-visualizer {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 6rem;
+            max-width: 1000px;
+            margin: 4rem auto;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+        }
+
+        .macro-icons-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4rem;
+            margin-bottom: 6rem;
+        }
+
+        .macro-visual-card { text-align: center; }
+        .icon-circle {
+            width: 100px; height: 100px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 2rem; font-size: 2.5rem; color: white;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .icon-circle:hover { transform: scale(1.15) rotate(10deg); }
+
+        .p-circle { background: linear-gradient(135deg, #059669, #10B981); box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2); }
+        .c-circle { background: linear-gradient(135deg, #2563EB, #3B82F6); box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2); }
+        .f-circle { background: linear-gradient(135deg, #D97706, #F59E0B); box-shadow: 0 20px 40px rgba(245, 158, 11, 0.2); }
+
+        .macro-label { font-size: 1rem; color: var(--text-dim); margin-bottom: 0.5rem; }
+        .macro-value-big { font-family: var(--font-serif); font-size: 4rem; color: var(--text); line-height: 1; }
+
+        .stats-summary { display: flex; justify-content: center; gap: 6rem; margin-top: 4rem; padding-top: 4rem; border-top: 1px solid var(--border); }
+        .stat-mini { text-align: center; }
+        .stat-mini-label { font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.2em; margin-bottom: 1rem; display: block; }
+        .stat-mini-val { font-family: var(--font-serif); font-size: 2.5rem; color: var(--accent); }
+
+        /* Meal Timeline */
+        .plan-timeline { max-width: 1100px; margin: 10rem auto 0; border-left: 1px solid var(--border); padding-left: 8rem; }
+        @media (max-width: 1100px) { .plan-timeline { padding-left: 3rem; } }
+
+        .day-block { padding-bottom: 12rem; position: relative; }
+        .day-block::before {
+            content: ''; position: absolute; left: calc(-8rem - 6px); top: 10px;
+            width: 12px; height: 12px; border-radius: 50%; background: var(--accent);
+        }
+        @media (max-width: 1100px) { .day-block::before { left: calc(-3rem - 6.5px); } }
+
+        .day-id { font-family: var(--font-serif); font-size: 6rem; font-style: italic; opacity: 0.1; line-height: 1; margin-bottom: 2rem; }
+        .meals-inner-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4rem; }
+        @media (max-width: 900px) { .meals-inner-grid { grid-template-columns: 1fr; } }
+        
+        .meal-luxury-box { background: var(--glass); border: 1px solid var(--border); padding: 4rem; border-radius: 4px; transition: all 0.6s ease; }
+        .meal-luxury-box:hover { border-color: var(--accent); background: rgba(255,255,255,0.05); }
+
+        .footer { padding: 4rem 0; text-align: center; font-size: 0.6rem; letter-spacing: 0.2em; border-top: 1px solid var(--border); color: var(--text-dim); }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div id="cursor"></div>
+    <div id="cursor-follower"></div>
+    <div class="noise"></div>
+    <div class="bio-background"></div>
+
+    <div class="curtain">
+        <div class="curtain-logo">SOUKHIM</div>
+    </div>
+
+    <main class="container">
+        <!-- Hero -->
+        <header class="hero">
+            <p class="badge">CURATED BIOLOGY</p>
+            <h1 class="hero-title">
+                <span class="word">THE</span> <span class="word italic">REFINEMENT</span>
+            </h1>
+            <p class="hero-description">Precision nutrition protocols, hand-crafted through the essence of Kerala's heritage. Your organic evolution begins here.</p>
+            
+            <div class="luxury-quote-container">
+                <p class="luxury-quote">“Your body is the result of your daily choices. We refine those choices into perfection.”</p>
+            </div>
+
+            <div class="btn-wrap hero-cta">
+                <button class="btn-luxury" onclick="gsap.to(window, {scrollTo: '#form-section', duration: 2})">
+                    <span>LAUNCH PROTOCOL</span>
+                </button>
+            </div>
+            
+            <div class="scroll-hint"><span></span></div>
+        </header>
+
+        <!-- Form -->
+        <section id="form-section" class="section">
+            <div class="section-header">
+                <p class="badge">Phase 01</p>
+                <h2 class="title-large">Analysis of the <br>Biological State.</h2>
+            </div>
+            
+            <form id="diet-form" class="luxury-form">
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label>BIO-AGE</label>
+                        <input type="number" name="age" placeholder="25" required min="10" max="100">
+                    </div>
+                    <div class="form-item">
+                        <label>MASS (KG)</label>
+                        <input type="number" name="weight" step="0.1" placeholder="75.0" required min="30" max="300">
+                    </div>
+                    <div class="form-item">
+                        <label>STATURE (CM)</label>
+                        <input type="number" name="height" placeholder="170" required min="100" max="250">
+                    </div>
+                    <div class="form-item">
+                        <label>BIOLOGY</label>
+                        <select name="gender" required><option value="male">MALE</option><option value="female">FEMALE</option></select>
+                    </div>
+                    <div class="form-item full-width">
+                        <label>METABOLIC INTENSITY</label>
+                        <select name="activity" required>
+                            <option value="1.2">MINIMAL MOVEMENT</option>
+                            <option value="1.375">LIGHT ACTIVITY (1-3 DAYS)</option>
+                            <option value="1.55" selected>MODERATE HARMONY (3-5 DAYS)</option>
+                            <option value="1.725">PEAK PERFORMANCE (6-7 DAYS)</option>
+                        </select>
+                    </div>
+                    <div class="form-item">
+                        <label>CULINARY PATH</label>
+                        <select name="preference" required><option value="any">TRADITIONAL PALATE</option><option value="veg">VEGETARIAN REFINEMENT</option></select>
+                    </div>
+                    <div class="form-item">
+                        <label>EVOLUTION SPEED</label>
+                        <select name="goal" required>
+                            <option value="0.25">GENTLE</option>
+                            <option value="0.5" selected>BALANCED</option>
+                            <option value="0.75" selected>INTENSE</option>
+                            <option value="0">MAINTAIN PHYSIQUE</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="btn-wrap"><button type="submit" class="btn-luxury"><span>REVEAL BLUEPRINT</span></button></div>
+            </form>
+        </section>
+
+        <!-- Dynamic Results -->
+        <section id="results-section" class="hidden">
+            <div class="results-hero">
+                <p class="badge">Phase 02</p>
+                <h2 class="title-large" style="margin-bottom: 1rem;">Your personalized diet plan</h2>
+                <p style="color: var(--text-dim); letter-spacing: 0.1em;">Based on your preferences and goals</p>
+            </div>
+
+            <div class="macro-visualizer">
+                <p style="text-align: center; color: var(--text-dim); margin-bottom: 4rem; font-size: 1.1rem;">Your optimal daily nutrition breakdown is:</p>
+                
+                <div class="macro-icons-grid">
+                    <div class="macro-visual-card p-reveal">
+                        <div class="icon-circle p-circle"><i class="fa-solid fa-dumbbell"></i></div>
+                        <p class="macro-label">Protein:</p>
+                        <p class="macro-value-big">90g</p>
+                    </div>
+                    <div class="macro-visual-card c-reveal">
+                        <div class="icon-circle c-circle"><i class="fa-solid fa-bowl-rice"></i></div>
+                        <p class="macro-label">Carbs:</p>
+                        <p class="macro-value-big">180g</p>
+                    </div>
+                    <div class="macro-visual-card f-reveal">
+                        <div class="icon-circle f-circle"><i class="fa-solid fa-droplet"></i></div>
+                        <p class="macro-label">Fats:</p>
+                        <p class="macro-value-big">50g</p>
+                    </div>
+                </div>
+
+                <div class="stats-summary">
+                    <div class="stat-mini">
+                        <span class="stat-mini-label">TOTAL ENERGY</span>
+                        <span id="target-calories" class="stat-mini-val">0</span>
+                        <span style="font-size: 0.8rem; color: var(--text-dim);">KCALS</span>
+                    </div>
+                    <div class="stat-mini">
+                        <span class="stat-mini-label">HYDRATION TARGET</span>
+                        <span id="target-water" class="stat-mini-val">0</span>
+                        <span style="font-size: 0.8rem; color: var(--text-dim);">LITERS</span>
+                    </div>
+                </div>
+
+                <div class="btn-wrap" style="margin-top: 5rem;">
+                    <button class="btn-luxury" style="padding: 1.5rem 3.5rem; border-radius: 8px; font-size: 0.75rem;" onclick="gsap.to(window, {scrollTo: '#plan-anchor', duration: 1.5})">
+                        <span>Show detailed meal plan</span>
+                    </button>
+                    <button id="regenerate-btn" class="btn-luxury" style="padding: 1.5rem 3.5rem; margin-left:1rem; border-radius: 8px; font-size: 0.75rem; background: transparent; border-color: rgba(255,255,255,0.1);">
+                        <span>MODIFY STATS</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="plan-anchor"></div>
+            <div class="plan-timeline" id="plan-container"></div>
+        </section>
+
+        <footer class="footer">SOUKHIM MASTERPIECE &copy; 2026. THE ART OF WELLNESS.</footer>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const cursor = document.querySelector('#cursor');
+            const follower = document.querySelector('#cursor-follower');
+            window.addEventListener('mousemove', (e) => {
+                gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
+                gsap.to(follower, { x: e.clientX - 14, y: e.clientY - 14, duration: 0.3 });
+            });
+
+            const tl = gsap.timeline();
+            tl.to('.curtain-logo', { opacity: 1, duration: 1, letterSpacing: '1em' })
+              .to('.curtain', { yPercent: -100, duration: 1.5, ease: 'expo.inOut' })
+              .from('.hero .word', { y: 200, stagger: 0.2, duration: 2, ease: 'expo.out' }, "-=0.5")
+              .from('.hero p, .hero-cta, .scroll-hint', { opacity: 0, y: 30, stagger: 0.1, duration: 1 }, "-=1.2");
+
+            gsap.utils.toArray('.section-header').forEach(el => {
+                gsap.from(el, { opacity: 0, y: 100, duration: 1.5, scrollTrigger: { trigger: el, start: 'top 85%' } });
+            });
+
+            const dietForm = document.getElementById('diet-form');
+            const formSection = document.getElementById('form-section');
+            const resultsSection = document.getElementById('results-section');
+            const planContainer = document.getElementById('plan-container');
+            const calValue = document.getElementById('target-calories');
+            const waterValue = document.getElementById('target-water');
+
+            const meals = {
+                veg: {
+                    breakfast: ["Bespoke Wheat Puttu with steamed Kadala.", "Oats Upma with heritage garden harvest.", "Hand-pressed Idlis with coconut emulsion.", "Moong Dal Crêpe with ginger salsa.", "Appam with Forest Vegetable Stew.", "Stone-ground Upma with organic veggies.", "Tempered Aval with toasted coconut."],
+                    lunch: ["Red Rice, Cabbage Thoran & Dal.", "Millet Grains with Avial masterpiece.", "Red Rice with Kovakka flash-sauté.", "Hand-milled Rice with Lentil & beet.", "Steam-cooked Yam with bird's eye chili.", "Whole Wheat Rotis with heritage Daal.", "Rice with Bitter Gourd Thoran & Rasam."],
+                    dinner: ["Oats Velouté with emerald beans.", "Wheat Crêpes with tomato chutney.", "Broken Wheat Kanji with micro-Thoran.", "Vegetable Broth with organic Appam.", "Black Pepper Paneer with harvest salad.", "Hill Banana with spice-infused milk.", "Heritage Salad with lemon reduction."]
+                },
+                nonVeg: {
+                    breakfast: ["Artisan Eggs with wilted spinach.", "Idli with Fish Curry reduction.", "Pepper Oats with range-free eggs.", "Wheat Puttu with organic Egg Roast.", "Appam with Malabar Egg Stew.", "Chicken Consommé with Puttu infusion.", "Moong Dal Crepe with farm Omelette."],
+                    lunch: ["Red Rice with Fish & Bean Thoran.", "Brown Rice with Grilled Spiced Chicken.", "Red Rice with Kingfish Moilee.", "Prawns Ularthiyathu & buttermilk.", "Organic Chicken Stew with Chappati.", "Sustainable Sardine with Red Rice.", "Mackerel fry with legacy Thoran."],
+                    dinner: ["Grilled Pearl Spot & garden greens.", "Chicken Consommé with peppercorn.", "Wheat Dosa with farm-egg Omelette.", "Heritage Salad with bio-eggs.", "Red Rice Kanji & piquant fish.", "Peppered Chicken with hand-milled oats.", "Flash-seared Calamari & sea salt."]
+                }
+            };
+
+            dietForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const fd = new FormData(dietForm);
+                const data = {
+                    age: parseInt(fd.get('age')),
+                    weight: parseFloat(fd.get('weight')),
+                    height: parseInt(fd.get('height')),
+                    gender: fd.get('gender'),
+                    activity: parseFloat(fd.get('activity')),
+                    preference: fd.get('preference'),
+                    goal: parseFloat(fd.get('goal'))
+                };
+
+                let bmr = (data.gender === 'male') ? (10 * data.weight) + (6.25 * data.height) - (5 * data.age) + 5 : (10 * data.weight) + (6.25 * data.height) - (5 * data.age) - 161;
+                const calTarget = Math.max(Math.round((bmr * data.activity) - (data.goal * 1000)), 1200);
+                const waterTarget = (data.weight * 0.035).toFixed(1);
+
+                planContainer.innerHTML = '';
+                const db = data.preference === 'veg' ? meals.veg : meals.nonVeg;
+                const portionLabel = data.goal == 0 ? "Standard Service" : "Deficit Protocol";
+
+                ["I", "II", "III", "IV", "V", "VI", "VII"].forEach((num, index) => {
+                    const block = document.createElement('div');
+                    block.className = 'day-block';
+                    block.innerHTML = `<div class="day-id">DAY ${num}</div><p style="color:var(--accent); font-size:0.7rem; letter-spacing:0.2em; margin-bottom:3rem;">${portionLabel}</p><div class="meals-inner-grid"><div class="meal-luxury-box"><p class="badge">01. SUNRISE</p><p class="meal-luxury-desc" style="margin-top:1rem;">${db.breakfast[index % 7]}</p></div><div class="meal-luxury-box"><p class="badge">02. ZENITH</p><p class="meal-luxury-desc" style="margin-top:1rem;">${db.lunch[index % 7]}</p></div><div class="meal-luxury-box"><p class="badge">03. DUSK</p><p class="meal-luxury-desc" style="margin-top:1rem;">${db.dinner[index % 7]}</p></div></div>`;
+                    planContainer.appendChild(block);
+                    gsap.from(block, { opacity:0, y:50, duration:1.5, scrollTrigger: { trigger: block, start: 'top 85%' }});
+                });
+
+                gsap.to(formSection, { opacity: 0, scale: 0.95, duration: 1, onComplete: () => {
+                    formSection.classList.add('hidden');
+                    resultsSection.classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    const tlRes = gsap.timeline();
+                    tlRes.from('.results-hero', { opacity: 0, y: 50, duration: 1.5 })
+                         .from('.macro-visualizer', { opacity: 0, scale:0.9, y: 100, duration: 1.5, ease: 'expo.out' }, "-=1")
+                         .from('.macro-visual-card', { opacity: 0, y: 50, stagger: 0.3, duration: 1, ease: 'power3.out' }, "-=0.8");
+
+                    gsap.to({val: 0}, { val: calTarget, duration: 3, onUpdate: function() { calValue.innerText = Math.floor(this.targets()[0].val); }});
+                    gsap.to({val: 0}, { val: waterTarget, duration: 3, onUpdate: function() { waterValue.innerText = this.targets()[0].val.toFixed(1); }});
+                }});
+            });
+
+            document.getElementById('regenerate-btn').addEventListener('click', () => {
+                gsap.to(resultsSection, { opacity: 0, duration: 0.8, onComplete: () => {
+                    resultsSection.classList.add('hidden');
+                    resultsSection.style.opacity = 1;
+                    formSection.classList.remove('hidden');
+                    gsap.from(formSection, { opacity: 0, scale: 1.05, duration: 1 });
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }});
+            });
+        });
+    </script>
+</body>
+</html>
